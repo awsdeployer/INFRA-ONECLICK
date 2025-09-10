@@ -10,7 +10,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
 
     steps:
       - name: Checkout repo
@@ -46,3 +46,24 @@ jobs:
           IP=$(terraform output -raw public_ip)
           echo "EC2_PUBLIC_IP=$IP" >> $GITHUB_ENV
           echo "Deployed EC2 Public IP: $IP"
+
+      - name: Wait for Runner to be Online
+        run: |
+          echo "Waiting for GitHub runner to come online..."
+          RUNNER_NAME="org_runner"
+          MAX_RETRIES=20
+          SLEEP_SEC=15
+          for i in $(seq 1 $MAX_RETRIES); do
+            STATUS=$(curl -s -H "Authorization: token ${{ secrets.ORG_RUNNER_PAT }}" \
+                     -H "Accept: application/vnd.github+json" \
+                     https://api.github.com/orgs/awsdeployer/actions/runners \
+                     | jq -r ".runners[] | select(.name==\"$RUNNER_NAME\") | .status")
+            if [ "$STATUS" == "online" ]; then
+              echo "Runner is online!"
+              exit 0
+            fi
+            echo "Attempt $i/$MAX_RETRIES: Runner not online yet. Waiting $SLEEP_SEC seconds..."
+            sleep $SLEEP_SEC
+          done
+          echo "Runner did not come online in time."
+          exit 1
