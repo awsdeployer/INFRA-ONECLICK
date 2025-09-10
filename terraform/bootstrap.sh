@@ -9,7 +9,14 @@ DYNAMODB_TABLE="terraform-locks"
 # Check and create S3 bucket if it doesn't exist
 if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
   echo "Creating S3 bucket: $BUCKET_NAME"
-  aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint=$REGION
+  if [ "$REGION" = "us-east-1" ]; then
+    aws s3api create-bucket --bucket "$BUCKET_NAME"
+  else
+    aws s3api create-bucket \
+      --bucket "$BUCKET_NAME" \
+      --region "$REGION" \
+      --create-bucket-configuration LocationConstraint=$REGION
+  fi
 else
   echo "S3 bucket $BUCKET_NAME already exists"
 fi
