@@ -3,7 +3,7 @@ set -e
 
 # Variables
 REGION=${AWS_REGION:-us-east-1}
-BUCKET_NAME="awsdeployer"
+BUCKET_NAME="awsdeployer-s3"
 DYNAMODB_TABLE="terraform-locks"
 
 # Check and create S3 bucket if it doesn't exist
