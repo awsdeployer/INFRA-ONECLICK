@@ -3,12 +3,13 @@ resource "aws_instance" "demo" {
   instance_type = var.instance_type
   key_name      = "ashwanthramnv"
 
-  # Inject setup.sh and replace runner_token
+  # Inject the runner_token variable into the script
   user_data = templatefile("${path.module}/setup.sh", {
     runner_token = var.runner_token
   })
 
   tags = {
-    Name = "awsdeployer"
+    Name = "awsdeployer-org-runner"
   }
 }
+
