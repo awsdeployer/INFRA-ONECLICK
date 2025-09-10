@@ -1,12 +1,10 @@
 name: CD - oneclick
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'k8s/**'
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Setup Infra and Deploy GitHub Runner"]   # depends on workflow 1
+    types:
+      - completed
 
 jobs:
   INFRA-ONECLICK-DEPLOY:
