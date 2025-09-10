@@ -43,7 +43,6 @@ jobs:
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/pv/
           kubectl get pv
-          kubectl apply -f k8s/services/
           kubectl get svc -n ingress-nginx
           kubectl wait --namespace ingress-nginx \
             --for=condition=ready pod \
