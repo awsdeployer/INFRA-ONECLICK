@@ -14,6 +14,7 @@ tar xzf ./actions-runner.tar.gz
 rm actions-runner.tar.gz
 
 echo "Runner token received: ${runner_token}" >> /var/log/user-data.log
+
 sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
 
 # Configure runner as ubuntu user
@@ -23,12 +24,10 @@ sudo -u ubuntu ./config.sh --unattended \
   --name org_runner \
   --work "_work" >> /var/log/runner-config.log 2>&1
 
-# Install and start service
-sudo ./svc.sh install
-sudo ./svc.sh start
 
 sudo hostnamectl set-hostname master
-
+sudo ./svc.sh install
+sudo ./svc.sh start
 # ===== Install Docker =====
 sudo apt remove -y docker docker-engine docker.io containerd runc || true
 sudo apt install -y docker.io
