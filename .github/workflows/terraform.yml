@@ -1,0 +1,48 @@
+name: Setup Infra and Deploy Org Runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Get short-lived org runner token
+        id: get_token
+        run: |
+          TOKEN=$(curl -sX POST \
+            -H "Authorization: Bearer ${{ secrets.ORG_RUNNER_PAT }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/orgs/awsdeployer/actions/runners/registration-token \
+            | jq -r .token)
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
+            echo "[ERROR] Failed to get runner token"
+            exit 1
+          fi
+
+          echo "RUNNER_TOKEN=$TOKEN" >> $GITHUB_ENV
+          echo "[INFO] Short-lived token fetched successfully"
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_runner_token: ${{ env.RUNNER_TOKEN }}
+
