@@ -1,7 +1,7 @@
-variable "aws_region" {
-  description = "AWS region to deploy into"
+variable "ami_id" {
+  description = "AMI ID"
   type        = string
-  default     = "us-east-1"
+  default     = "ami-04f59c565deeb2199" # <-- you can hardcode here OR override via TF_VAR_ami_id
 }
 
 variable "instance_type" {
@@ -10,14 +10,8 @@ variable "instance_type" {
   default     = "t2.large"
 }
 
-variable "ami_id" {
-  description = "AMI ID for the instance"
+variable "runner_token" {
+  description = "GitHub runner token"
   type        = string
-  default     = "ami-04f59c565deeb2199" # Ubuntu AMI
 }
 
-variable "runner_token" {
-  description = "GitHub token for runner registration"
-  type        = string
-  sensitive   = true
-}
