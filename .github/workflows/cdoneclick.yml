@@ -1,7 +1,7 @@
 name: CD - oneclick
 
 on:
-  #push:
+  push:
     branches:
       - main
     paths-ignore:
