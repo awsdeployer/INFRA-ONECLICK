@@ -1,35 +1,30 @@
 #!/bin/bash
-set -e
 
-LOG_FILE="/home/ubuntu/runner-setup.log"
-exec > >(tee -a "$LOG_FILE") 2>&1
-
-echo "[INFO] Starting GitHub Runner setup..."
-
-# Install dependencies
-apt-get update -y
-apt-get install -y curl tar jq
+# === Install GitHub Runner ===
+sudo apt-get update -y
+sudo apt-get install -y curl tar jq
 
 # Create runner directory
-mkdir -p /home/ubuntu/actions-runner
+sudo mkdir -p /home/ubuntu/actions-runner
 cd /home/ubuntu/actions-runner
 
-# Download latest GitHub runner
-LATEST_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r .tag_name)
-curl -o actions-runner.tar.gz -L "https://github.com/actions/runner/releases/download/$${LATEST_VERSION}/actions-runner-linux-x64-$${LATEST_VERSION:1}.tar.gz"
-tar xzf actions-runner.tar.gz
+# Download and extract runner
+curl -o actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v2.328.0/actions-runner-linux-x64-2.328.0.tar.gz
+tar xzf ./actions-runner.tar.gz
+rm actions-runner.tar.gz
 
-# Configure runner
+echo "Runner token received: ${runner_token}" >> /var/log/user-data.log
+
+sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
+
+# Configure runner as ubuntu user
 sudo -u ubuntu ./config.sh --unattended \
-  --url "https://github.com/orgs/awsdeployer" \
-  --token ${runner_token} \
-  --labels ec2,org-runner \
-  --name "ec2-runner-$${HOSTNAME}" \
-  --replace
+  --url https://github.com/awsdeployer \
+  --token "${runner_token}" \
+  --name org_runner \
+  --work "_work" >> /var/log/runner-config.log 2>&1
 
 # Install and start service
-./svc.sh install
-./svc.sh start
-
-echo "[SUCCESS] GitHub Runner setup completed!"
+sudo ./svc.sh install
+sudo ./svc.sh start
 
