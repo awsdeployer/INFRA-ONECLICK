@@ -8,6 +8,6 @@ resource "aws_instance" "demo" {
   })
 
   tags = {
-    Name = "awsdeployer-org-runner"
+    Name = "awsdeployer"
   }
 }
