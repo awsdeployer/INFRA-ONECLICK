@@ -40,11 +40,17 @@ jobs:
       - name: Apply Ingress, PV & Namespace
         run: |
           kubectl apply -f k8s/namespace.yaml
-          kubectl get ns
-          kubectl apply -f k8s/ingress/
-          kubectl get svc -n ingress-nginx
-          kubectl apply -f k8s/pv
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/pv/
           kubectl get pv
+          kubectl apply -f k8s/services/
+          kubectl get svc -n ingress-nginx
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            -l app.kubernetes.io/component=controller \
+            --timeout=180s
+          kubectl apply -f k8s/ingress/
+
 
       # ======================
       # MONITOR-LOGS
