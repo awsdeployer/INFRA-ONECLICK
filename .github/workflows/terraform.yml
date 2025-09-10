@@ -1,4 +1,4 @@
-name: Setup Infra and Deploy Org Runner
+name: Setup Infra and Deploy GitHub Runner
 
 on:
   workflow_dispatch:
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Get short-lived org runner token
+      - name: Get short-lived runner token
         id: get_token
         run: |
           TOKEN=$(curl -sX POST \
@@ -27,14 +27,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/orgs/awsdeployer/actions/runners/registration-token \
             | jq -r .token)
-
-          if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
-            echo "[ERROR] Failed to get runner token"
-            exit 1
-          fi
-
           echo "RUNNER_TOKEN=$TOKEN" >> $GITHUB_ENV
-          echo "[INFO] Short-lived token fetched successfully"
 
       - name: Terraform Init
         working-directory: terraform
@@ -45,3 +38,11 @@ jobs:
         run: terraform apply -auto-approve
         env:
           TF_VAR_runner_token: ${{ env.RUNNER_TOKEN }}
+
+      - name: Get EC2 Public IP
+        working-directory: terraform
+        id: ec2_ip
+        run: |
+          IP=$(terraform output -raw public_ip)
+          echo "EC2_PUBLIC_IP=$IP" >> $GITHUB_ENV
+          echo "Deployed EC2 Public IP: $IP"
