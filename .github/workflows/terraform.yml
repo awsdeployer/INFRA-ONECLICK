@@ -45,4 +45,3 @@ jobs:
         run: terraform apply -auto-approve
         env:
           TF_VAR_runner_token: ${{ env.RUNNER_TOKEN }}
-
