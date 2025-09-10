@@ -9,15 +9,14 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "awsdeployer"           # Your S3 bucket name
-    key            = "terraform.tfstate"     # Path inside bucket
-    region         = var.aws_region          # Use the same region as provider
-    dynamodb_table = "terraform-locks"       # DynamoDB table for locking
-    encrypt        = true                    # Encrypt the state file
+    bucket         = "awsdeployer"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"            # Static value here
+    dynamodb_table = "terraform-locks"
+    encrypt        = true
   }
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = var.aws_region   # Still fine here
 }
-
