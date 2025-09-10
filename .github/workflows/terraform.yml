@@ -31,7 +31,7 @@ jobs:
 
       - name: Bootstrap Terraform Backend
         working-directory: terraform
-        run: ./bootstrap.sh
+        run: bash ./bootstrap.sh
 
       - name: Terraform Init
         working-directory: terraform
