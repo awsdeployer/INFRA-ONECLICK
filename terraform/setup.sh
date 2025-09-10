@@ -23,7 +23,7 @@ LATEST_VERSION=$(curl -s https://api.github.com/repos/actions/runner/releases/la
 curl -o actions-runner.tar.gz -L "https://github.com/actions/runner/releases/download/$${LATEST_VERSION}/actions-runner-linux-x64-$${LATEST_VERSION:1}.tar.gz"
 tar xzf ./actions-runner.tar.gz
 
-# Configure runner using the short-lived token (Terraform injects it)
+# Configure runner (IMPORTANT: no sudo here!)
 ./config.sh --unattended \
   --url "$GITHUB_URL" \
   --token "${runner_token}" \
@@ -31,7 +31,7 @@ tar xzf ./actions-runner.tar.gz
   --labels "$RUNNER_LABELS" \
   --replace
 
-# Install as service
+# Install and start service (svc.sh must be run with sudo, but AFTER config is done)
 sudo ./svc.sh install
 sudo ./svc.sh start
 
