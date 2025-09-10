@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # === Install GitHub Runner ===
 sudo apt-get update -y
 sudo apt-get install -y curl tar jq
@@ -25,3 +27,4 @@ sudo -u ubuntu ./config.sh --unattended \
 # Install and start service
 sudo ./svc.sh install
 sudo ./svc.sh start
+
