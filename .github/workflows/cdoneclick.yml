@@ -14,7 +14,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      steps:
       # ======================
       # Run setup.sh first
       # ======================
@@ -22,6 +21,7 @@ jobs:
         run: |
           chmod +x ./setup.sh
           ./setup.sh
+
       # ======================
       # Checkout current repo
       # ======================
