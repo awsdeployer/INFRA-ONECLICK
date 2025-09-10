@@ -8,9 +8,8 @@ sudo apt install -y docker.io
 sudo systemctl enable docker
 sudo systemctl start docker
 
-# Add login user (not root) to docker group (works in CI/CD too)
-RUNNER_USER=${SUDO_USER:-ubuntu}
-sudo usermod -aG docker $RUNNER_USER || true
+# Add login user (not root) to docker group
+sudo usermod -aG docker $(logname)
 
 echo "======= kubeadm initializing ========"
 sudo kubeadm init --cri-socket=unix:///var/run/crio/crio.sock
