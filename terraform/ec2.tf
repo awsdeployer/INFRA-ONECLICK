@@ -11,4 +11,3 @@ resource "aws_instance" "demo" {
     Name = "awsdeployer-org-runner"
   }
 }
-
