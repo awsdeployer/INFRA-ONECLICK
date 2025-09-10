@@ -1,7 +1,7 @@
 variable "ami_id" {
   description = "AMI ID"
   type        = string
-  default     = "ami-04f59c565deeb2199" # <-- you can hardcode here OR override via TF_VAR_ami_id
+  default     = "ami-04f59c565deeb2199"
 }
 
 variable "instance_type" {
@@ -20,5 +20,3 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
-
-
