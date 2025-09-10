@@ -51,7 +51,7 @@ jobs:
         run: |
           echo "Waiting for GitHub runner to come online..."
           RUNNER_NAME="org_runner"
-          MAX_RETRIES=20
+          MAX_RETRIES=30
           SLEEP_SEC=15
           for i in $(seq 1 $MAX_RETRIES); do
             STATUS=$(curl -s -H "Authorization: token ${{ secrets.ORG_RUNNER_PAT }}" \
