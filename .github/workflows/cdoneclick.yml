@@ -5,6 +5,7 @@ on:
     workflows: ["Setup Infra and Deploy GitHub Runner"]   # depends on workflow 1
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   INFRA-ONECLICK-DEPLOY:
