@@ -29,9 +29,9 @@ jobs:
             | jq -r .token)
           echo "RUNNER_TOKEN=$TOKEN" >> $GITHUB_ENV
 
-      - name: Bootstrap Terraform Backend
-        working-directory: terraform
-        run: bash ./bootstrap.sh
+      #- name: Bootstrap Terraform Backend
+      #  working-directory: terraform
+      #  run: bash ./bootstrap.sh
 
       - name: Terraform Init
         working-directory: terraform
