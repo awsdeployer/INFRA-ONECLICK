@@ -14,9 +14,21 @@ sudo usermod -aG docker $RUNNER_USER || true
 
 echo "======= kubeadm initializing ========"
 sudo kubeadm init --cri-socket=unix:///var/run/crio/crio.sock
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#mkdir -p $HOME/.kube
+#sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#sudo chown $(id -u):$(id -g) $HOME/.kube/config
+# Determine the user running the script (not root)
+RUNNER_USER=${SUDO_USER:-$(whoami)}
+RUNNER_HOME=$(eval echo "~$RUNNER_USER")
+
+echo "Script running as: $RUNNER_USER"
+mkdir -p $RUNNER_HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $RUNNER_HOME/.kube/config
+sudo chown $RUNNER_USER:$RUNNER_USER $RUNNER_HOME/.kube/config
+
+# Set KUBECONFIG for this session and future commands
+export KUBECONFIG=$RUNNER_HOME/.kube/config
+echo "export KUBECONFIG=$RUNNER_HOME/.kube/config" >> $RUNNER_HOME/.bashrc
 
 echo "===== Deploying Weave Net pod network ====="
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
