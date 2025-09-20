@@ -25,7 +25,6 @@ jobs:
         run: |
           chmod +x setup.sh
           ./setup.sh
-
       # ======================
       # Checkout current repo
       # ======================
@@ -40,9 +39,16 @@ jobs:
           # Namespace + PV
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/pv/
-          kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission || true
+      
+          # Wait for Ingress Controller
+          kubectl get svc -n ingress-nginx
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=ready pod \
+            -l app.kubernetes.io/component=controller \
+            --timeout=180s
+      
+          # Apply custom NodePort ingress service + ingress rules
           kubectl apply -f k8s/ingress/
-
 
 
 
@@ -59,7 +65,6 @@ jobs:
         run: |
           kubectl apply -f MONITOR-LOGS-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=flask-monitor -n ashapp --timeout=180s
-
       # ======================
       # HISTORY-SERVICES
       # ======================
@@ -73,7 +78,6 @@ jobs:
         run: |
           kubectl apply -f HISTORY-SERVICE-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=history-service -n ashapp --timeout=180s
-
       # ======================
       # AWS-ASHAPP
       # ======================
@@ -87,7 +91,6 @@ jobs:
         run: |
           kubectl apply -f AWS-CB-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=flask-app -n ashapp --timeout=180s
-
       # ======================
       # AUTOMATIC-DEPLOYER
       # ======================
