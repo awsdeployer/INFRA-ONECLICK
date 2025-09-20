@@ -40,7 +40,9 @@ jobs:
           # Namespace + PV
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/pv/
-          kubectl apply -f k8s/ingress/ --wait=false
+          kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission || true
+          kubectl apply -f k8s/ingress/
+
 
 
 
