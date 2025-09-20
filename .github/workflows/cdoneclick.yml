@@ -40,27 +40,7 @@ jobs:
           # Namespace + PV
           kubectl apply -f k8s/namespace.yaml
           kubectl apply -f k8s/pv/
-    
-          # Wait for Ingress Controller pod to be ready
-          kubectl wait --namespace ingress-nginx \
-          --for=condition=ready pod \
-          -l app.kubernetes.io/component=controller \
-          --timeout=180s
-
-          # Wait for admission webhook jobs to finish (important!)
-          kubectl wait --namespace ingress-nginx \
-          --for=condition=complete job/ingress-nginx-admission-create \
-          --timeout=180s || true
-
-          kubectl wait --namespace ingress-nginx \
-          --for=condition=complete job/ingress-nginx-admission-patch \
-          --timeout=180s || true
-
-          # Verify webhook secret exists (defensive check)
-          kubectl get secret -n ingress-nginx ingress-nginx-admission || true
-
-          # Apply custom NodePort ingress service + ingress rules
-          kubectl apply -f k8s/ingress/
+          kubectl apply -f k8s/ingress/ --wait=false
 
 
 
