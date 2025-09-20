@@ -58,6 +58,7 @@ jobs:
       - name: Apply MONITOR-LOGS-MICROSERVICE manifests
         run: |
           kubectl apply -f MONITOR-LOGS-MICROSERVICE/backend/k8s/ --recursive
+          kubectl wait --for=condition=ready pod -l app=mysql -n ashapp --timeout=180
           kubectl wait --for=condition=ready pod -l app=flask-monitor -n ashapp --timeout=180s
 
       # ======================
