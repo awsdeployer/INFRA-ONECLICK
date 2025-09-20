@@ -3,9 +3,9 @@ resource "aws_instance" "demo" {
   instance_type = var.instance_type
   key_name      = "ashwanthramnv"
 
-  user_data = templatefile("${path.module}/setup.sh", {
-    runner_token = var.runner_token
-  })
+ # user_data = templatefile("${path.module}/setup.sh", {
+ #   runner_token = var.runner_token
+ # })
 
   tags = {
     Name = "awsdeployer"
