@@ -105,5 +105,9 @@ jobs:
           kubectl apply -f AUTODEPLOY-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=deployer-app -n ashapp --timeout=180s
 
-      - name: Show running port
-        run: echo "✅ Application is running on port 31000"
+      - name: Show running port and public IP
+        run: |
+          PUBLIC_IP=$(curl -s ifconfig.me)
+          echo "✅ Application is running on http://$PUBLIC_IP:31000"
+          echo "✅ Prometheus is running on http://$PUBLIC_IP:31000"
+          echo "✅ grafana is running on http://$PUBLIC_IP:31000"
