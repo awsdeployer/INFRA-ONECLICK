@@ -104,3 +104,6 @@ jobs:
         run: |
           kubectl apply -f AUTODEPLOY-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=deployer-app -n ashapp --timeout=180s
+
+      - name: Show running port
+        run: echo "✅ Application is running on port 31000"
