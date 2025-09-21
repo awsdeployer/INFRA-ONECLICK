@@ -108,6 +108,6 @@ jobs:
       - name: Show running port and public IP
         run: |
           PUBLIC_IP=$(curl -s ifconfig.me)
-          echo "✅ Application is running on http://$PUBLIC_IP:31000"
-          echo "✅ Prometheus is running on http://$PUBLIC_IP:31000"
-          echo "✅ grafana is running on http://$PUBLIC_IP:31000"
+          echo "Application is running on http://$PUBLIC_IP:31000"
+          echo "Prometheus is running on http://$PUBLIC_IP:32000"
+          echo "Grafana is running on http://$PUBLIC_IP:32001"
