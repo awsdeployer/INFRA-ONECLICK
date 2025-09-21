@@ -79,7 +79,7 @@ jobs:
           kubectl apply -f HISTORY-SERVICE-MICROSERVICE/backend/k8s/ --recursive
           kubectl wait --for=condition=ready pod -l app=history-service -n ashapp --timeout=180s
       # ======================
-      # AWS-ASHAPP
+      # AWS-CB
       # ======================
       - name: Checkout AWS-CB-MICROSERVICE
         uses: actions/checkout@v4
