@@ -2,7 +2,7 @@ name: CD - oneclick
 
 on:
   workflow_run:
-    workflows: ["Setup Infra and Deploy GitHub Runner"]   # depends on workflow 1
+    workflows: ["Setup Infra and Deploy GitHub Runner"] 
     types:
       - completed
   workflow_dispatch:
