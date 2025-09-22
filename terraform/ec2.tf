@@ -7,8 +7,8 @@ resource "aws_instance" "demo" {
     runner_token = var.runner_token
   })
 
- # tags = {
- #   Name = "awsdeployer"
- #  }
+  tags = {
+    Name = "awsdeployer"
+   }
 }
 
